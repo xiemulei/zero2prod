@@ -3,12 +3,15 @@ use std::net::TcpListener;
 use crate::routes::{health_check, subscribe};
 use actix_web::{dev::Server, web, App, HttpServer};
 use sqlx::PgPool;
+use tracing_actix_web::TracingLogger;
 
 pub fn run(listener: TcpListener, db_pool: PgPool) -> Result<Server, std::io::Error> {
     // 将连接包装在一个智能指针中
     let connection = web::Data::new(db_pool);
     let server = HttpServer::new(move || {
         App::new()
+            // 将中间件通过 `wrap` 方法加入 `App` 中
+            .wrap(TracingLogger::default())
             .route("/health_check", web::get().to(health_check))
             // 为 POST /subscriptions 在请求路由表中添加一个条目
             .route("/subscriptions", web::post().to(subscribe))
