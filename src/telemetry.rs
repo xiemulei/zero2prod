@@ -12,11 +12,16 @@ use tracing_subscriber::{EnvFilter, Registry};
 ///
 /// 将 `impl Subscriber` 作为返回值的类型，以避免写出繁琐的真实类型
 /// 我们需要显式地讲返回类型标记为 `Send` 和 `Sync`，以便后面可以将其传递给 `init_subscriber`
-pub fn get_subscriber<Sink>(name: String, env_filter: String, sink: Sink) -> impl Subscriber + Send + Sync
+pub fn get_subscriber<Sink>(
+    name: String,
+    env_filter: String,
+    sink: Sink,
+) -> impl Subscriber + Send + Sync
 where
     Sink: for<'a> MakeWriter<'a> + Send + Sync + 'static,
 {
-    let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(env_filter));
+    let env_filter =
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(env_filter));
 
     // 将格式化的跨度输出到 stdout
     let formatting_layer = BunyanFormattingLayer::new(name, sink);

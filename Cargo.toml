@@ -30,6 +30,8 @@ secrecy = { version = "0.8", features = ["serde"] }
 unicode-segmentation = "1"
 validator = "0.18"
 rand_core = "0.6.4"
+linkify = "0.10"
+rand = { version = "0.8", features = ["std_rng"]}
 
 [dev-dependencies]
 claim = "0.5"
