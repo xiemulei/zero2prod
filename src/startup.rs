@@ -2,7 +2,7 @@ use std::net::TcpListener;
 
 use crate::configuration::{DatabaseSettings, Settings};
 use crate::email_client::EmailClient;
-use crate::routes::{confirm, health_check, subscribe};
+use crate::routes::{confirm, health_check, publish_newsletter, subscribe};
 use actix_web::web::Data;
 use actix_web::{dev::Server, web, App, HttpServer};
 use sqlx::postgres::PgPoolOptions;
@@ -35,13 +35,14 @@ pub fn run(
             // 为 POST /subscriptions 在请求路由表中添加一个条目
             .route("/subscriptions", web::post().to(subscribe))
             .route("/subscriptions/confirm", web::get().to(confirm))
+            .route("/newsletters", web::post().to(publish_newsletter))
             // 将连接注册为应用程序状态的一部分
             .app_data(db_pool.clone())
             .app_data(email_client.clone())
             .app_data(base_url.clone())
     })
-    .listen(listener)?
-    .run();
+        .listen(listener)?
+        .run();
 
     Ok(server)
 }
