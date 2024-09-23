@@ -1,5 +1,6 @@
 application:
   port: 8080
+  hmac_secret: "super-long-adn-secret-random-key-needed-to-verify-message-integrity"
 database:
   host: 127.0.0.1
   port: 5432
@@ -8,3 +9,4 @@ database:
   database_name: newsletter
 email_client:
   timeout_milliseconds: 10000
+redis_uri: redis://localhost:6379

@@ -45,7 +45,10 @@ impl std::error::Error for StoreTokenError {
     }
 }
 
-pub fn error_chain_fmt(e: &impl std::error::Error, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+pub fn error_chain_fmt(
+    e: &impl std::error::Error,
+    f: &mut std::fmt::Formatter<'_>,
+) -> std::fmt::Result {
     writeln!(f, "{}\n", e)?;
     let mut current = e.source();
 
@@ -115,7 +118,8 @@ pub async fn subscribe(
         .await
         .context("Failed to store the confirmation token for a new subscriber")?;
 
-    transaction.commit()
+    transaction
+        .commit()
         .await
         .context("Failed to commit SQL transaction to store a new subscriber")?;
     send_confirmation_email(
@@ -124,8 +128,8 @@ pub async fn subscribe(
         &base_url.0,
         &subscription_token,
     )
-        .await
-        .context("Failed to send a confirmation email")?;
+    .await
+    .context("Failed to send a confirmation email")?;
 
     Ok(HttpResponse::Ok().finish())
 }
@@ -156,18 +160,17 @@ async fn store_token(
         subscription_token,
         subscriber_id
     )
-        .execute(&mut **transaction)
-        .await
-        .map_err(|e| {
-            // 如果查询执行失败，记录错误信息
-            tracing::error!("Failed to execute query: {:?}", e);
-            StoreTokenError(e)
-        })?;
+    .execute(&mut **transaction)
+    .await
+    .map_err(|e| {
+        // 如果查询执行失败，记录错误信息
+        tracing::error!("Failed to execute query: {:?}", e);
+        StoreTokenError(e)
+    })?;
 
     // 返回Ok(())表示操作成功
     Ok(())
 }
-
 
 #[tracing::instrument(
     name = "Saving new subscriber details in the database",
@@ -188,12 +191,12 @@ async fn insert_subscriber(
         new_subscriber.name.as_ref(),
         Utc::now()
     )
-        .execute(&mut **transaction)
-        .await
-        .map_err(|e| {
-            tracing::error!("Failed to execute query: {:?}", e);
-            e
-        })?;
+    .execute(&mut **transaction)
+    .await
+    .map_err(|e| {
+        tracing::error!("Failed to execute query: {:?}", e);
+        e
+    })?;
 
     Ok(subscriber_id)
 }
