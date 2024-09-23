@@ -101,7 +101,7 @@ async fn insert_newsletter_issue(
 
 #[tracing::instrument(skip_all)]
 async fn enqueue_delivery_task(
-    transaction: &mut Transaction<'_, sqlx::Postgres>,
+    transaction: &mut Transaction<'_, Postgres>,
     newsletter_issue_id: Uuid,
 ) -> Result<(), anyhow::Error> {
     let query = sqlx::query!(
