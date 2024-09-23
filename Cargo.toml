@@ -14,7 +14,6 @@ name = "zero2prod"
 actix-web = "4"
 actix-session = { version = "0.10", features = ["redis-session-rustls"] }
 actix-web-flash-messages = { version = "0.5", features = ["cookies"] }
-actix-web-lab = "0.22"
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "cookies"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 serde = { version = "1", features = ["derive"] }
@@ -38,10 +37,7 @@ linkify = "0.10"
 rand = { version = "0.8", features = ["std_rng"] }
 thiserror = "1"
 anyhow = "1"
-base64 = "0.22"
 argon2 = { version = "0.5", features = ["std"] }
-urlencoding = "2"
-htmlescape = "0.3"
 
 [dev-dependencies]
 claim = "0.5"
