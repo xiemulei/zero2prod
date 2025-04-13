@@ -5,8 +5,8 @@ use actix_web::http::StatusCode;
 use actix_web::{web, HttpResponse, ResponseError};
 use anyhow::Context;
 use chrono::offset::Utc;
-use rand::distributions::Alphanumeric;
-use rand::{thread_rng, Rng};
+use rand::distr::Alphanumeric;
+use rand::{rng, Rng};
 use sqlx::{PgPool, Postgres, Transaction};
 use uuid::Uuid;
 
@@ -231,7 +231,7 @@ pub async fn send_confirmation_email(
 
 /// 生成随机的长度为 25 个字符且大小写敏感的订阅令牌
 fn generate_subscription_token() -> String {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     std::iter::repeat_with(|| rng.sample(Alphanumeric))
         .map(char::from)
         .take(25)
